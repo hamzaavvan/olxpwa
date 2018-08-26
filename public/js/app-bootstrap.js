@@ -103,7 +103,7 @@ window.onload = () => {
         setScript("js/materialize.min.js").then(() => {
             setScript("js/app.js").then(() => {
                 $(".loader").remove();
-
+ 
                 $('select').formSelect();
                 $('.tabs').tabs();
             })
