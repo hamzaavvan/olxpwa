@@ -1,0 +1,91 @@
+<link rel="stylesheet" href="css/materialize.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="/manifest.json">
+
+<title>Sign up</title>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/helper.js"></script>
+<script type="text/javascript" src="js/app-bootstrap.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col l7 s12">
+            <div class="card">
+            <div class="card-content">
+                <span class="card-title">Sign up</span>
+                
+                <div class="input-field">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input id="name" type="text" class="validate">
+                  <label for="name">Your Name</label>
+                  <span class="helper-text" data-error="Name field is required" data-success=""></span>
+                </div>
+                <div class="input-field">
+                  <i class="material-icons prefix">phone</i>
+                  <input id="telephone" type="number" class="validate">
+                  <label for="telephone">Telephone</label>
+                  <span class="helper-text" data-error="Telephone field is required" data-success=""></span>
+                </div>
+                
+                <div class="input-field">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input type="email" id="email" class="validate" data-error="Wrong email format">
+                    <label for="email">Email</label>
+                    <span class="helper-text" data-error="Incorrect email" data-success=""></span>
+                </div>
+                <div class="input-field">
+                    <i class="material-icons prefix">verified_user</i>
+                    <input type="password" minlength="6" id="password" class="validate">
+                    <label for="password">Password</label>
+                    <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                </div>
+            </div>
+            <div class="card-action">
+                <button id="register" class="btn">Sign up <i class="material-icons prefix">send</i></button>
+                <a href="sign-in.html">Already have an account?</a>
+            </div>
+            </div>
+        </div>
+        
+        <div class="col l5 s12">
+            <div class="card">
+                <div class="card-content">
+                    <p>By registering, you get access to <b>My Account</b>  where you can:</p>
+                    <br>
+                    <ul class="collection">
+                        <li class="collection-item avatar">
+                            <i class="material-icons circle">folder</i>
+                            <span class="title">Manage your Ads</span>
+                            <p> (Edit, Delete, Upgrade)
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-icons circle green">insert_chart</i>
+                            <span class="title">Check responses</span>
+                            <p> to your Ads
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-icons circle red">settings</i>
+                            <span class="title">Manage your settings</span>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+</script>

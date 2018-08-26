@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="/css/materialize.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.json">
+
+<title>Profile</title>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/helper.js"></script>
+<script type="text/javascript" src="/js/app-bootstrap.js"></script>
+
+<div class="container">
+    <div class="row mt-2em profile">
+        <div class="col m10 l4 s12">
+            <div class="col s12 m12 l12 mb-1em valign-wrapper center avatar-wrapper offset-s2 offset-m4" center>
+                <div class="img-avatar col l3 m2 s2">☺</div> 
+                <span class="name"></span>
+            </div>
+
+
+            <div class="col l12 m12 s12 offset-m3 mb-2em info">
+                <div class="city mt-1em col  l12">
+                    <i class="material-icons left">location_on</i>
+                </div>
+                <div class="phone mt-1em col  l12">
+                    <i class="material-icons left">smartphone</i>
+                </div>
+                
+                <div class="joined mt-1em col  l12">
+                    <i class="material-icons left">access_time</i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12 m12 l8">
+            <form class="update-profile">
+                <div class="card">
+                    <div class="col s12 l12 m12 mb-1em no-pad">
+                        <ul class="tabs">
+                            <li class="tab col s6 m6 l6"><a class="active" href="#general">General</a></li>
+                            <li class="tab col s6 m6 l6"><a href="#security">Security</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card-content" id="general">
+                            <span class="card-title mb-1em">Your Profile</span>
+                            
+                            <div class="input-field">
+                              <i class="material-icons prefix">account_circle</i>
+                              <input id="name" name="name" type="text" class="validate">
+                              <label for="name">Your Name</label>
+                              <span class="helper-text" data-error="Name field is required" data-success=""></span>
+                            </div>
+                            <div class="input-field">
+                              <i class="material-icons prefix">smartphone</i>
+                              <input id="phone_no" name="phone_no" type="number" class="validate">
+                              <label for="phone_no">Phone no</label>
+                              <span class="helper-text" data-error="Telephone field is required" data-success=""></span>
+                            </div>
+                            
+                            <div class="input-field">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input type="email" id="email" name="email" class="validate" data-error="Wrong email format">
+                                <label for="email">Email</label>
+                                <span class="helper-text" data-error="Incorrect email" data-success=""></span>
+                            </div>
+                            <div class="input-field">
+                                <i class="material-icons prefix">location_on</i>
+                                <input type="text" id="city" name="city" class="validate">
+                                <label for="city">City</label>
+                                <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                            </div>
+                            <div class="input-field">
+                                <i class="material-icons prefix">location_searching</i>
+                                <input type="text" id="province" name="province" class="validate">
+                                <label for="province">Province</label>
+                                <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                            </div>
+                    </div>
+                    
+                    <div class="card-content" id="security">
+                        <span class="card-title mb-1em">Security</span>
+
+                        <div class="input-field">
+                            <i class="material-icons prefix">verified_user</i>
+                            <input type="password" minlength="6" name="curr_password" id="curr_password" class="validate">
+                            <label for="curr_password">Current Password</label>
+                            <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">verified_user</i>
+                            <input type="password" minlength="6" name="new_password" id="new_password" class="validate">
+                            <label for="new_password">New Password</label>
+                            <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">verified_user</i>
+                            <input type="password" minlength="6" name="conf_password" id="conf_password" class="validate">
+                            <label for="conf_password">Confirm Password</label>
+                            <span class="helper-text" data-error="Password should be atleast 6 characters" data-success=""></span>
+                        </div>
+                    </div>
+
+                    <div class="card-action">
+                        <button class="btn">Update <i class="material-icons prefix">send</i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#name").val(app.user.name);
+        $("#phone_no").val(app.user.phone_no);
+        $("#email").val(app.user.email);
+        $("#city").val(app.user.city);
+        $("#province").val(app.user.province);
+
+        $(".img-avatar").html(app.user.name[0].toUpperCase());
+        $(".name").html(app.user.name);
+        $(".city").append(app.user.city);
+        $(".phone").append(app.user.phone_no);
+        $(".joined").append(new Date(app.user.created_at).toDateString());
+
+        if (!app.user.city)
+            $(".city").hide();
+        else if (app.user.province)
+            $('.city').append(", " + app.user.province)
+    });
+
+    $('.update-profile').on('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(e.target);
+        var option = {
+            method: 'put',
+            body: JSON.stringify(formData.toJson()),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+        fetch(`/api/user/${app.user.uid}`, option).then(res => res.json()).then(d => {
+            if (d.error) {
+                M.toast({html: d.message});
+            } else {
+                M.toast({html: d.message});
+                location.reload();
+            }
+        })
+    })
+</script>

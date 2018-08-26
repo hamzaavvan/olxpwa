@@ -1,0 +1,183 @@
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/css/materialize.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/slick.css">
+<link rel="stylesheet" href="/css/slick-theme.css">
+
+<title>View Ad</title>
+
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/helper.js"></script>
+<script type="text/javascript" src="/js/app-bootstrap.js"></script>
+<script type="text/javascript" src="/js/slick.min.js"></script>
+
+<div class="container">
+    <div class="row ad">
+        <div class="col m7 s12 info row right">
+            <h3 class="title"></h3>
+
+            <p class="desc mt-1em mb-2em"></p>
+
+            <p class="seller" title="Seller"><i class="material-icons">person_pin</i> <span class="seller-name"></span></p>
+            <a class="btn-floating pulse btn-large waves-effect waves-light msg-seller"><i class="material-icons">message</i></a>
+
+            <h3 class="price mb-1em" right><i class="material-icons">attach_money</i>
+            </h3>
+
+            <div class="divider"></div>
+
+            <div class="city mt-1em col m3">
+                <i class="material-icons">location_on</i> 
+            </div>
+            <div class="phone mt-1em col m4">
+                <i class="material-icons">smartphone</i> 
+            </div>
+            
+            <div class="category mt-1em col m4">
+                <i class="material-icons">bookmark</i> 
+            </div>
+                
+        </div>
+
+        <div class="col m5 s12 l5 mt-2em left">
+            <div class="col m12 img-view">
+                <img src="" alt="">
+            </div>
+            
+            <div class="col  s12 img-showcase mt-2em">
+            </div>
+        </div>
+    
+        <div class="col m12 s12 l12 mt-2em left">
+            <h4>Ads By <span class="seller-name"></span></h4>
+            <div class="side-ads slick col l12 m12 s12"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    url_pieces = location.href.split('/');
+    id = url_pieces[url_pieces.length-1];
+
+    fetch(`/api/ads/${id}`).then(res => res.json()).then(ad => {
+        var html = ``;
+        ad = ad.data;
+        
+        if (ad.imgs.length > 0) {
+            var main_img = '/'+ad.imgs[0];
+            var side_imgs = '';
+
+            ad.imgs.forEach(src => {
+                side_imgs += `<img src="/${src}">`;
+            });
+
+            $('.img-showcase').html(side_imgs);
+            $('.img-view img').attr('src', main_img);
+
+            $('.img-showcase').slick({
+                infinite: false,
+                slidesToShow: 3,
+                slidesToScroll: 2
+            });
+        } else {
+            $('.img-view img').attr('src', '/img/no-product-img.png');
+        }
+
+        $(".title").html(ad.title);
+        $(".desc").html(ad.description.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+        $(".city").append(ad.city);
+        $(".phone").append(ad.phone_no);
+        $(".category").append(ad.category);
+        $(".seller-name").append(ad.name);
+        $(".price").prepend(ad.price);
+        $(".msg-seller").attr('href', `/message/${ad.user_id}`);
+
+        params = setParams({
+            user_id: ad.user_id,
+            limit: 4
+        })
+
+        fetch(`/api/ads${params}`).then(res => res.json())
+        .then(ads => {
+            $(".total").html(ads.data.total);
+            
+            var html = '';
+        
+            ads.data.docs.forEach(ad => {
+                html += `<div class="col s12 m6 l4 ad">
+                    <div class="card">
+                    <div class="card-image">
+                        <div class='ad-img' style="background-image: url(${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
+                        <!-- <img src="img/no-product-img.png"> -->
+                        <span class="card-title"><a href="/ad/${ad._id}">${ad.title}</a></span>
+                        ${ad.user_id!=app.user ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                    </div>
+                    <div class="card-content info">
+                        <p>${ad.description}.</p>
+                        
+                        <div class="city mt-1em">
+                            <i class="material-icons">location_on</i> ${ad.city}
+                        </div>
+                    </div>
+                    </div>
+                </div>`;
+            });
+
+            $(".side-ads").html(html);
+        
+            $('.side-ads').slick({
+                infinite: false,
+                slidesToShow: 3,
+                slidesToScroll: 2,
+                responsive: [
+                    {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                    },
+                    {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                    },
+                    {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                    }
+                    // You can unslick at a given breakpoint now by adding:
+                    // settings: "unslick"
+                    // instead of a settings object
+                ]
+            });
+        });
+
+
+        if (ad.user_id==app.user)
+            $(".msg-seller").remove();
+    });
+
+    $('.img-showcase').on('click', 'img', function() {
+        $('.img-view img').attr('src', $(this).attr('src'));
+    });
+
+    setTimeout(() => {
+        $('.msg-seller').removeClass('pulse');
+    }, 4000);
+</script>

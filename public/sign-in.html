@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="css/materialize.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="/manifest.json">
+
+<title>Sign in</title>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/helper.js"></script>
+<script type="text/javascript" src="js/app-bootstrap.js"></script>
+
+<div class="container">
+    <div class="row valign-wrapper">
+        <div class="col  l7 s12 offset-l2 valign">
+            <form class="signin-form">
+                <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Sign in</span>
+                    
+                    <div class="input-field">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input type="email" name="email" required class="validate">
+                        <label for="email">Email</label>
+                        <span class="helper-text" data-error="Incorrect email"></span>
+                    </div>
+                    <div class="input-field">
+                        <i class="material-icons prefix">verified_user</i>
+                        <input type="password" required name="password" class="validate">
+                        <label for="password">Password</label>
+                        <span class="helper-text" data-error="Password required"></span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn">Sign in <i class="material-icons prefix">send</i></button>
+                    <a href="sign-up.html">Don't have an account?</a>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".signin-form").on("submit", function(e) {
+        e.preventDefault();
+        var formData = new FormData(e.target);
+       
+        var option = {
+            method: "post", 
+            body: JSON.stringify(formData.toJson()),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch("/signin", option, res => res.json()).then(res => res.json())
+        .then(d => {
+            if (d.success)
+                window.location = '/';
+            else
+                M.toast({html: d.error})
+            
+        });
+    });
+</script>

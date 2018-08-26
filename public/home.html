@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="/css/materialize.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.json">
+
+<title>Home</title>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/helper.js"></script>
+<script type="text/javascript" src="/js/app-bootstrap.js"></script>
+
+<div class="container">
+    <div class="cats-selector-wrapper row mb-3em">
+    </div>
+    <div class="divider"></div>
+
+    <div class="row">
+        <div class="sub-header-wrapper">
+            <div class="sub-header">
+                <div class="side-opts"></div>
+                
+                <h4 class="pull-right mb-1em">Ads (<span class="total"></span>)</h4>
+            </div>
+        </div>
+
+        <div class="ads"></div>
+
+        <div class="mt-2em col l12 s12 m12">
+            <ul center class="pagination">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    var limit = 10;
+
+    $(".container").on('keyup', '.search', function() {
+        if ($(this).val().length > 0) {
+            $(".cats-selector-wrapper").hide();
+        } else {
+            $(".cats-selector-wrapper").show();
+        }
+
+        params = setParams({
+            cat: $(".cat-selector :selected").val(),
+            keyword: $(this).val()
+        });
+        
+        fetch(`/api/ads${params}`).then(res => res.json())
+        .then(ads => {
+            var total = Math.ceil(ads.data.total/limit);
+            $(".total").html(ads.data.total);
+            
+            $(".ads").html(app.renderProduct(ads.data.docs));
+            app.setPagination(total, getParam("page"), getParam("cat"));
+        });
+    });
+    
+    fetch("/ads/cats").then(res => {
+        var html = '';
+        
+        res.json().then(cats => {
+            cats.data.forEach(cat => {
+                html += `<div class="col m4 s4 l3 cat" center onclick="window.location='?cat=${cat.key}'">
+                            <i class="material-icons">${cat.icon}</i>
+                            <a href="?cat=${cat.key}" class="link">${cat.name}</a>
+                        </div>`;
+            });
+            
+            $(".cats-selector-wrapper").html(html);
+        });
+    })
+
+    var params = setParams({
+        page: getParam("page") ? getParam("page") : 1,
+        cat: getParam("cat") ? getParam("cat") : "",
+        keyword: getParam("keyword") ? getParam("keyword") : ""
+    });
+
+    fetch(`/api/ads${params}`).then(data => {
+        var html = '';
+        
+        data.json().then(ads => {
+            ads.data.docs.forEach(ad => {
+                html += `<div class="col s12 m6 l4 ad">
+                    <div class="card">
+                    <div class="card-image">
+                        <div class='ad-img' style="background-image: url(${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
+                        <!-- <img src="img/no-product-img.png"> -->
+                        <span class="card-title"><a href="ad/${ad._id}">${ad.title}</a></span>
+                        ${ad.user_id!=app.user ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                    </div>
+                    <div class="card-content info">
+                        <p>${ad.description}.</p>
+                        
+                        <div class="city mt-1em">
+                            <i class="material-icons">location_on</i> ${ad.city}
+                        </div>
+                    </div>
+                    </div>
+                </div>`;
+            });
+            
+            $(".total").html(ads.data.total);
+            $(".ads").html(html);
+            
+
+            var total = Math.ceil(ads.data.total/limit);
+            var page = getParam("page"), cat = getParam("cat");
+
+            html = `<li class="${page==1?'disabled':'waves-effect'}"><a href="${page>1?'?page='+(page-1):''}${cat?'&cat='+cat:''}"><i class="material-icons">chevron_left</i></a></li>`;
+            var set = false;
+
+            for(var i = 1; i <= total; i++) {
+                html += `<li page="${i}" class="${ page==i||(!page&&!set) ? 'active': 'waves-effect'}"><a href="?page=${i}${cat?'&cat='+cat:''}">${i}</a></li>`;
+                set = true;
+            }
+
+            
+            html += `<li class="${page==total?'disabled':'waves-effect'}"><a href="${page<total?'?page='+(parseInt(page)+1):''}${cat?'&cat='+cat:''}"><i class="material-icons">chevron_right</i></a></li>`;
+            
+
+            $(".pagination").html(html);
+
+        });
+    });
+
+    if (getParam("cat") || getParam("keyword")) {
+        $(".side-opts").html('<a href="/"><i class="material-icons">home</i></a>');
+    }
+</script>
