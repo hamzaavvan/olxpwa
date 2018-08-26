@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(__dirname+"/../public/"));
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Origin", `http://localhost:${process.env.PORT || 400}`);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 
@@ -137,4 +137,4 @@ app.post('/signin', async (req, res) => {
 
 app.use("/api", api);
 
-app.listen(4000);
+app.listen(process.env.PORT || 4000);
