@@ -117,22 +117,25 @@
 
 <script>
     $(document).ready(function() {
-        $("#name").val(app.user.name);
-        $("#phone_no").val(app.user.phone_no);
-        $("#email").val(app.user.email);
-        $("#city").val(app.user.city);
-        $("#province").val(app.user.province);
+        setTimeout(() => {
 
-        $(".img-avatar").html(app.user.name[0].toUpperCase());
-        $(".name").html(app.user.name);
-        $(".city").append(app.user.city);
-        $(".phone").append(app.user.phone_no);
-        $(".joined").append(new Date(app.user.created_at).toDateString());
+            $("#name").val(app.user.name);
+            $("#phone_no").val(app.user.phone_no);
+            $("#email").val(app.user.email);
+            $("#city").val(app.user.city);
+            $("#province").val(app.user.province);
 
-        if (!app.user.city)
-            $(".city").hide();
-        else if (app.user.province)
-            $('.city').append(", " + app.user.province)
+            $(".img-avatar").html(app.user.name[0].toUpperCase());
+            $(".name").html(app.user.name);
+            $(".city").append(app.user.city);
+            $(".phone").append(app.user.phone_no);
+            $(".joined").append(new Date(app.user.created_at).toDateString());
+
+            if (!app.user.city)
+                $(".city").hide();
+            else if (app.user.province)
+                $('.city').append(", " + app.user.province)
+        }, 500);
     });
 
     $('.update-profile').on('submit', function(e) {
