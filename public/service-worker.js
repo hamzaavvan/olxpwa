@@ -1,10 +1,12 @@
 CACHE = {static: "app_static_cache", dynamic: "app_dynamic_cache"};
 CAHCE_NAME = [
     '/',
-    '/index.html',
-    '/sign-in.html',
-    '/sign-up.html',
-    '/post-ad.html',
+    '/home',
+    '/signin',
+    '/signup',
+    '/post-ad',
+    '/profile',
+    '/message',
     
     // CSS
     '/css/style.css',
