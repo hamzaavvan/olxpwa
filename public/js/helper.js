@@ -100,6 +100,13 @@ function setHeader(user) {
         </div>
 
         <ul id="slide-out" class="sidenav">
+        ${app.user ?`<li><div class="user-view">
+        <div class="background">
+        </div>
+        <a href="/profile#name"><div class="img-avatar circle">${app.getUser("name")[0]}</div></a>
+        <a href="/profile#name"><span class="white-text name">${app.getUser("name")}</span></a>
+        <a href="/profile#email"><span class="white-text email">${app.getUser("email")}</span></a>
+      </div></li>` : '' }
             <li><a href="/"><i class="material-icons left">home</i> Home</a></li>
             ${!user ? `<li><a href="/signin"><i class="material-icons left">account_circle</i> Sign in</a></li>
             <li><a href="/signup"><i class="material-icons left">insert_invitation</i> Register</a></li>` : ''}

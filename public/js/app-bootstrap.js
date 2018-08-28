@@ -21,6 +21,9 @@ window.onload = () => {
             nameField: $("#name"),
             phoneField: $("#telephone"),
             searchField: $("#isearch") || $("#search"),
+            getUser: (prop) => {
+                return app.user ? app.user[prop] : '#null';
+            },
             addHelperText: (error, msg = '', text = '') => {
                 return `<span class="helper-text" data-error="${error}" data-success="${msg}">${text}</span>`;
             },
@@ -34,7 +37,7 @@ window.onload = () => {
                             <div class='ad-img' style="background-image: url(${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
                             <!-- <img src="img/no-product-img.png"> -->
                             <span class="card-title"><a href="ad/${ad._id}">${ad.title}</a></span>
-                            <a class="btn-floating halfway-fab waves-effect waves-light "><i class="material-icons">message</i></a>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>
                         </div>
                         <div class="card-content">
                             <p>${ad.description}.</p>
@@ -139,4 +142,14 @@ window.onload = () => {
         <meta name="msapplication-TileImage" content="img/icons/icon-144x144.png">
         <meta name="msapplication-TileColor" content="#2F3BA2">`);
     });
+
+    $(document).ready(function() {
+        if (app.user) {
+            $("body").append(`<div class="fixed-action-btn">
+                    <a class="btn-floating btn-large" href="/post-ad">
+                    <i class="large material-icons">add</i>
+                    </a>
+                </div>`);
+        }
+    })
 }

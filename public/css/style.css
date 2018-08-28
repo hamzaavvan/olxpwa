@@ -45,6 +45,10 @@
     display: inline-block;
 }
 
+*[inline-block] {
+    display: inline-block;
+}
+
 .nav-wrapper li a i {
     margin-right: 5px;
 }
@@ -237,4 +241,14 @@
 
 i.left {
     margin-right: 5px !important;
+}
+
+.side-ad-info div {
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.user-view .background {
+    background-color: #666;
+    background: -webkit-linear-gradient(top, #898181 0%,#989494 44%,#666 100%)
 }

@@ -88,19 +88,29 @@
         
         data.json().then(ads => {
             ads.data.docs.forEach(ad => {
+                console.log(ad)
                 html += `<div class="col s12 m6 l4 ad">
                     <div class="card">
                     <div class="card-image">
                         <div class='ad-img' style="background-image: url(${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
                         <!-- <img src="img/no-product-img.png"> -->
                         <span class="card-title"><a href="ad/${ad._id}">${ad.title}</a></span>
-                        ${ad.user_id!=app.user ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                        ${app.user&&ad.user_id!=app.user._id ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
                     </div>
-                    <div class="card-content info">
+
+                    <div class="card-content info side-ad-info">
                         <p>${ad.description}.</p>
                         
                         <div class="city mt-1em">
                             <i class="material-icons">location_on</i> ${ad.city}
+                        </div>
+            
+                        <div class="category mt-1em">
+                            <i class="material-icons left">bookmark</i> ${ad.category} 
+                        </div>
+                        
+                        <div class="joined mt-1em" title="Posted">
+                            <i class="material-icons left">access_time</i> ${new Date(ad.created_at).toDateString()}
                         </div>
                     </div>
                     </div>

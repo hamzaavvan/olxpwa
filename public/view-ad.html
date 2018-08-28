@@ -27,7 +27,8 @@
             <p class="desc mt-1em mb-2em"></p>
 
             <p class="seller" title="Seller"><i class="material-icons">person_pin</i> <span class="seller-name"></span></p>
-            <a class="btn-floating pulse btn-large waves-effect waves-light msg-seller"><i class="material-icons">message</i></a>
+            <p title="Posted"><i class="material-icons">access_time</i> <span class="posted"></span></p>
+            <a class="btn-floating pulse btn-large waves-effect waves-light msg-seller hide"><i class="material-icons">message</i></a>
 
             <h3 class="price mb-1em" right><i class="material-icons">attach_money</i>
             </h3>
@@ -97,8 +98,12 @@
         $(".phone").append(ad.phone_no);
         $(".category").append(ad.category);
         $(".seller-name").append(ad.name);
+        $(".posted").append(new Date(ad.created_at).toDateString());
         $(".price").prepend(ad.price);
-        $(".msg-seller").attr('href', `/message/${ad.user_id}`);
+
+        if (app.user&&ad.user_id!=app.user._id) {
+            $(".msg-seller").removeClass('hide').attr('href', `/message/${ad.user_id}`);
+        }
 
         params = setParams({
             user_id: ad.user_id,
@@ -115,16 +120,24 @@
                 html += `<div class="col s12 m6 l4 ad">
                     <div class="card">
                     <div class="card-image">
-                        <div class='ad-img' style="background-image: url(${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
+                        <div class='ad-img' style="background-image: url(/${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
                         <!-- <img src="img/no-product-img.png"> -->
                         <span class="card-title"><a href="/ad/${ad._id}">${ad.title}</a></span>
-                        ${ad.user_id!=app.user ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                        ${app.user&&ad.user_id!=app.user.uid ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
                     </div>
-                    <div class="card-content info">
+                    <div class="card-content info side-ad-info">
                         <p>${ad.description}.</p>
                         
                         <div class="city mt-1em">
-                            <i class="material-icons">location_on</i> ${ad.city}
+                            <i class="material-icons left">location_on</i> ${ad.city}
+                        </div>
+            
+                        <div class="category mt-1em">
+                            <i class="material-icons left">bookmark</i> ${ad.category} 
+                        </div>
+                
+                        <div class="posted mt-1em" title="Posted">
+                            <i class="material-icons left">access_time</i> ${new Date(ad.created_at).toDateString()}
                         </div>
                     </div>
                     </div>
