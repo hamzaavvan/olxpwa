@@ -19,7 +19,7 @@
     <div class="row mt-2em profile">
         <div class="col m10 l4 s12">
             <div class="col s12 m12 l12 mb-1em valign-wrapper center avatar-wrapper offset-s2 offset-m4" center>
-                <div class="img-avatar">☺</div> 
+                <img src="" class="avatar circle">
                 <span class="name"></span>
             </div>
 
@@ -127,7 +127,7 @@
             $("#city").val(app.user.city);
             $("#province").val(app.user.province);
 
-            $(".img-avatar").html(app.user.name[0].toUpperCase());
+            $(".avatar").attr('src', `https://api.adorable.io/avatars/285/${app.user.name}`);
             $(".name").html(app.user.name);
             $(".city").append(app.user.city);
             $(".phone").append(app.user.phone_no);

@@ -30,6 +30,7 @@
             <p class="seller" title="Seller"><i class="material-icons">person_pin</i> <span class="seller-name"></span></p>
             <p title="Posted"><i class="material-icons">access_time</i> <span class="posted"></span></p>
             <a class="btn-floating pulse btn-large waves-effect waves-light msg-seller hide"><i class="material-icons">message</i></a>
+            <a class="delete btn-floating waves-effect waves-light red hide"><i class="material-icons">delete</i></a>
 
             <h3 class="price mb-1em" right><i class="material-icons">attach_money</i>
             </h3>
@@ -92,7 +93,7 @@
         } else {
             $('.img-view img').attr('src', '/img/no-product-img.png');
         }
-
+        
         $(".title").html(ad.title);
         $(".desc").html(ad.description.replace(/(?:\r\n|\r|\n)/g, '<br>'));
         $(".city").append(ad.city);
@@ -104,13 +105,25 @@
 
         if (app.user&&ad.user_id!=app.user._id) {
             $(".msg-seller").removeClass('hide').attr('href', `/message/${ad.user_id}/?ad=${ad._id}`);
+        } else {
+            $(".delete").removeClass("hide");
+
+            $('.delete').on('click', function() {
+                fetch(`/api/ads/${ad._id}`, {method: 'delete'}).then(res => res.json())
+                .then(d => {
+                    console.log(d);
+
+                    if (d.success)
+                        window.location = "/";
+                })
+            })
         }
 
         params = setParams({
             user_id: ad.user_id,
             limit: 4
         })
-
+        
         fetch(`/api/ads${params}`).then(res => res.json())
         .then(ads => {
             $(".total").html(ads.data.total);
@@ -124,7 +137,7 @@
                         <div class='ad-img' style="background-image: url(/${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
                         <!-- <img src="img/no-product-img.png"> -->
                         <span class="card-title"><a href="/ad/${ad._id}">${ad.title}</a></span>
-                        ${app.user&&ad.user_id!=app.user.uid ? `<a href="/message/${ad.user_id}/?ad=${ad._id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                        ${app.user&&ad.user_id!=app.user.uid ? `<a href="/message/${ad.user_id}/?ad=${ad._id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ``}
                     </div>
                     <div class="card-content info side-ad-info">
                         <p>${ad.description}.</p>

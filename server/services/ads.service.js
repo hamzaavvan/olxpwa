@@ -15,6 +15,21 @@ exports.get = async (query, page, limit, sort='', offset = 0) => {
     }
 }
 
+exports.delete = async (query, page, limit, sort='', offset = 0) => {
+    var options = {page, limit, sort};
+
+    if (offset>0)
+        options.offset = offset;
+        
+    try {
+        let ads = await Ads.deleteOne(query, options);
+
+        return ads;
+    } catch (e) {
+        throw Error(e);
+    }
+}
+
 exports.count = async () => {
     return Ads.countDocuments();
 }

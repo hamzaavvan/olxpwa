@@ -103,7 +103,7 @@ function setHeader(user) {
         ${app.user ?`<li><div class="user-view">
         <div class="background">
         </div>
-        <a href="/profile#name"><div class="img-avatar circle">${app.getUser("name")[0]}</div></a>
+        <a href="/profile#name"><img class="circle" src="https://api.adorable.io/avatars/285/${app.getUser("name")}"></a>
         <a href="/profile#name"><span class="white-text name">${app.getUser("name")}</span></a>
         <a href="/profile#email"><span class="white-text email">${app.getUser("email")}</span></a>
       </div></li>` : '' }
