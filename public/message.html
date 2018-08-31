@@ -79,42 +79,20 @@
 
     setTimeout(() => {
         var reciever_id = !getParam("ad") ? getQuery() : getQuery(2);
-        var senders = [];
+        var recievers = [];
         
-            db.collection("messages")
-            .onSnapshot((snapshot) => {
+        db.collection("messages").onSnapshot((snapshot) => {
             if (snapshot.docs) {
-                if (getQuery() && getQuery()!="message") {
-                    $(".chat-body .start").hide();
-                    $(".chat-body").removeClass("valign-wrapper");
-                }
-
-                var html = "";
-                
                 snapshot.docs.forEach(doc => {
                     var msg = doc.data();
-                    if (senders.indexOf(msg.sender_id)==-1 && msg.sender_id!=app.user.uid) {
-                        senders.push(msg.sender_id);
-                    }
-                    
-                    if (getQuery() && getQuery()!="message") {
-                        html += `<div class="${msg.sender_id==app.user.uid ? "sent":"recieve"} col l7 s7 m7">
-                                    <span>${msg.msg}</span>
-                                    <small class="time">
-                                        ${new Date(msg.sent_at.seconds*1000).toDateString()}
-                                    </small>
-                                </div>`
+                    if (recievers.indexOf(msg.reciever_id)==-1 && msg.reciever_id!=app.user.uid && msg.reciever_id!=reciever_id) {
+                        recievers.push(msg.reciever_id);
                     }
                 });
 
-                $(".chat-body").html(html);
-                var a = $(".chat-body")[0];
-                a.scrollTop = a.scrollHeight;
-            }
-
-            html = "";
-            senders.forEach(sender => {
-                console.log(sender)
+                html = "";
+                console.log(reciever_id)
+                recievers.forEach(sender => {
                 fetch(`/api/user/${sender}`).then(res => res.json()).then(d => {
                         var user = d.user;
                         
@@ -129,7 +107,39 @@
                         }
                     });
                 })
+            }
+        });
 
+        console.log(reciever_id)
+        db.collection("messages")
+        .where('sender_id', '==', app.user.uid)
+        .where('reciever_id', '==', reciever_id)
+        .onSnapshot((snapshot) => {
+        if (snapshot.docs) {
+            if (getQuery() && getQuery()!="message") {
+                $(".chat-body .start").hide();
+                $(".chat-body").removeClass("valign-wrapper");
+            }
+
+            var html = "";
+            
+            snapshot.docs.forEach(doc => {
+                var msg = doc.data();
+                
+                if (getQuery() && getQuery()!="message") {
+                    html += `<div class="${msg.sender_id==app.user.uid ? "sent":"recieve"} col l7 s7 m7">
+                                <span>${msg.msg}</span>
+                                <small class="time">
+                                    ${new Date(msg.sent_at.seconds*1000).toDateString()}
+                                </small>
+                            </div>`
+                }
+            });
+
+            $(".chat-body").html(html);
+            var a = $(".chat-body")[0];
+            a.scrollTop = a.scrollHeight;
+        }
         });
 
     }, 1500)
