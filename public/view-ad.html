@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script src="/js/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
 <script type="text/javascript" src="/js/helper.js"></script>
 <script type="text/javascript" src="/js/app-bootstrap.js"></script>
 <script type="text/javascript" src="/js/slick.min.js"></script>
@@ -102,7 +103,7 @@
         $(".price").prepend(ad.price);
 
         if (app.user&&ad.user_id!=app.user._id) {
-            $(".msg-seller").removeClass('hide').attr('href', `/message/${ad.user_id}`);
+            $(".msg-seller").removeClass('hide').attr('href', `/message/${ad.user_id}/?ad=${ad._id}`);
         }
 
         params = setParams({
@@ -123,7 +124,7 @@
                         <div class='ad-img' style="background-image: url(/${ad.imgs.length>0 ? ad.imgs[0] : 'img/no-product-img.png'})" />
                         <!-- <img src="img/no-product-img.png"> -->
                         <span class="card-title"><a href="/ad/${ad._id}">${ad.title}</a></span>
-                        ${app.user&&ad.user_id!=app.user.uid ? `<a href="/message/${ad.user_id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
+                        ${app.user&&ad.user_id!=app.user.uid ? `<a href="/message/${ad.user_id}/?ad=${ad._id}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">message</i></a>` : ''}
                     </div>
                     <div class="card-content info side-ad-info">
                         <p>${ad.description}.</p>

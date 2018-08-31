@@ -252,3 +252,92 @@ i.left {
     background-color: #666;
     background: -webkit-linear-gradient(top, #898181 0%,#989494 44%,#666 100%)
 }
+
+.chat-side-panel {
+    height: 413px;
+    overflow: auto;
+}
+
+.chat-header {
+    border-bottom: 1px solid #26a69a;
+}
+
+.chat-body {
+    height: 300px;
+    padding: 20px 10px;
+}
+
+.chat-footer {
+    position: relative;
+}
+
+.active-user-thread .img-avatar, .users-list .img-avatar {
+    border-radius: 100%;
+    font-size: 1em;
+    background-color: #9e9e9e;
+    color: #fff;
+    text-align: center;
+    padding: 5px 12px !important;
+    margin-left: 0 !important;
+    margin-right: 5px;
+}
+
+.active-user-thread .img-avatar {
+    background-color: #26a69a;
+}
+
+.active-user-thread .chip, .users-list .chip {
+    padding-left: 0;
+    margin: 0 0 10px 0;
+    cursor: pointer;
+}
+
+.active-thread {
+
+}
+
+.msg-text {
+    padding-right: 30px !important;
+}
+
+.send-btn {
+    position: absolute;
+    top: 5px;
+    right: 0;
+}
+
+.active-user-thread {
+    margin-bottom: 15px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #cac7c7;
+}
+.chat-body .sent {
+    float: right;
+    cursor: default;
+    margin-bottom: 10px;
+}
+.chat-body .recieve {
+    cursor: default;
+    margin-bottom: 10px;
+}
+.chat-body .sent span {
+    text-align: right;
+    background-color: #e4e4e4;
+    border-radius: 1em;
+    display: block;
+    padding: 4px 12px;
+}
+
+.chat-body .recieve span {
+    background-color: #e4e4e4;
+    border-radius: 1em;
+    display: block;
+    padding: 4px 12px;
+}
+
+.chat-body .recieve .time {
+    text-align: right;
+}
+.chat-body .sent .time {
+    text-align: right;
+}

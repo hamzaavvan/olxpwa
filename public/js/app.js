@@ -11,6 +11,16 @@ if ('serviceWorker' in navigator) {
     }).catch(err => {
         console.log("Registration failde with error: "+err);
     });
+
+    navigator.serviceWorker.register('/firebase-messaging-sw.js').then(req => {
+        req.pushManager.subscribe({
+            userVisibleOnly: true
+        }).then(subscription => {
+            console.log('subscription: ', subscription.toJSON());
+        }).catch(err => {
+            console.log("Messaging sw registration failed");
+        });
+    });
 }
 
 

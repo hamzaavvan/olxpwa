@@ -112,19 +112,40 @@ window.onload = () => {
             })
         })
         
-        // var config = {
-        //     apiKey: "AIzaSyCCGf5qhYR_E7G-2dT5Z0wL5-cqFRvOiCE",
-        //     authDomain: "olxpwa-hamzaavvan.firebaseapp.com",
-        //     databaseURL: "https://olxpwa-hamzaavvan.firebaseio.com",
-        //     projectId: "olxpwa-hamzaavvan",
-        //     storageBucket: "",
-        //     messagingSenderId: "1007008541847"
-        // };
+        var config = {
+            apiKey: "AIzaSyCCGf5qhYR_E7G-2dT5Z0wL5-cqFRvOiCE",
+            authDomain: "olxpwa-hamzaavvan.firebaseapp.com",
+            databaseURL: "https://olxpwa-hamzaavvan.firebaseio.com",
+            projectId: "olxpwa-hamzaavvan",
+            storageBucket: "",
+            messagingSenderId: "1007008541847"
+        };
     
-        // firebase.initializeApp(config);
-        // db = firebase.firestore();
-        // const settings = {timestampsInSnapshots: true};
-        // db.settings(settings);
+        firebase.initializeApp(config);
+        db = firebase.firestore();
+        const settings = {timestampsInSnapshots: true};
+        db.settings(settings);
+        
+        app.db = db;
+
+        // Retrieve Firebase Messaging object.
+        const messaging = firebase.messaging();
+        messaging.usePublicVapidKey("BKhzVZNDRttNzX-YCWRVbgbXBhx9vPFoja12hh4JJRozxah2NrmmydfuMO1XuRNrbM3Aoi0WibFqAje-3_kSfXY");
+        messaging.onMessage(payload => {
+            console.log('Message recieved: ', payload);
+        })
+
+        messaging.requestPermission().then(() => {
+            console.log("Notification permission set!");
+            return messaging.getToken();
+        }).then(token => {
+            console.log("token")
+            app.token = token;
+            console.log(token)
+        }).catch(err => {
+            console.log("Unable to get notification permission");
+            console.log(err)
+        });
 
 
         setScript(

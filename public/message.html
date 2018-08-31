@@ -11,13 +11,124 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script src="/js/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
 <script type="text/javascript" src="/js/helper.js"></script>
 <script type="text/javascript" src="/js/app-bootstrap.js"></script>
 
 <div class="container">
-    
+    <div class="row">
+        <div class="col m3 l2 s12 chat-side-panel">
+            <h4>Chat</h4>
+
+            <div class="active-user-thread">
+            </div>
+
+            <div class="users-list">
+                <div class="chip">
+                    <span class="img-avatar circle">J</span>
+                    Jane Doe
+                </div>
+            </div>
+
+            <div class="no-threads hide">
+                <p>No chat found</p>
+            </div>
+        </div>
+        
+        <div class="active-thread col m9 l10 s12">
+            <div class="chat-header">
+                <p>
+                    <!-- <i class="material-icons">access_time</i> -->
+                    Active Chat
+                </p>
+            </div>
+            <div class="chat-body valign-wrapper row">
+                <div class="start center-align col m12 s12 l12">
+                    <i class="material-icons medium">message</i>
+                    <p>Start a chat with seller.</p>
+                </div>
+            </div>
+
+            <div class="chat-footer">
+                <div class="input-field">
+                    <textarea name="msg" id="msg" rows="1" class="materialize-textarea msg-text" ></textarea>
+                    <label for="msg">Send youe message</label>
+                </div>
+
+                <a href="" id="send-msg" class="send-btn">
+                    <i class="material-icons">send</i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
+    fetch(`/api/user/${getQuery(2)}`).then(res => res.json()).then(d => {
+        var user = d.user;
 
+        var html = `
+                <div class="chip" onclick="window.location = '/message/${user._id}'">
+                    <span class="img-avatar circle">${user.name[0]}</span>
+                    ${user.name}
+                </div>`;
+
+        $(".active-user-thread").html(html);
+    });
+
+    setTimeout(() => {
+        db.collection("messages").onSnapshot((snapshot) => {
+            if (snapshot.docs) {
+                $(".chat-body .start").hide();
+                $(".chat-body").removeClass("valign-wrapper");
+                
+                var html = "";
+
+                snapshot.docs.forEach(doc => {
+                    var msg = doc.data();
+                    console.log(msg.sent_at)
+                    html += `<div class="${msg.sender_id==2 ? "sent":"reciever"} col l7 s12 m7">
+                                <span>${msg.msg}</span>
+                                <small class="time">
+                                    ${new Date(msg.sent_at.seconds*1000).toDateString()}
+                                </small>
+                            </div>`
+                });
+
+                $(".chat-body").html(html);
+            }
+        });
+    }, 1500)
+
+    $(".send-btn").on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+        formData.append("msg", $('#msg').val());
+        formData.append("reciever_id", getQuery());
+        formData.append("ad_id", getParam("ad"));
+        formData.append("token", app.token);
+
+        var options = {
+            method: 'post',
+            body: JSON.stringify(formData.toJson()),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+        
+        db.collection("messages").add({
+            msg: $("#msg").val(),
+            sender_id: 2,
+            reciever_id: getQuery(2),
+            ad_id: getParam('ad'),
+            seen: 0,
+            sent_at: new Date()
+        }).then(docRef => {
+            console.log(docRef);
+          
+            fetch(`/api/message/`, options).then(res => res.json()).then(d => {
+                console.log(d)
+            });
+        })
+    })
 </script>

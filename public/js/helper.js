@@ -75,14 +75,14 @@ function setHeader(user) {
 
             <div class="search-wrapper hide mobile mt-1em">
                 <form class="row">
-                    <div class="input-field col l9 m9 s9">
+                    <div class="input-field col l9 m9 s9 no-right-pad">
                         <i class="material-icons prefix">search</i>
                         <input id="isearch" onclick="this.value = getParam('keyword') ? getParam('keyword') : ''" autofocus class="search" type="search" required>
                         <label for="isearch">Search</label>
                         <i id="close-search" class="material-icons">close</i>
                     </div>
 
-                    <div class="cat-selector input-field col s3 l3 m3">
+                    <div class="cat-selector input-field col s3 l3 m3 no-left-pad">
                         <select>
                         <option value="" selected>All</option>
                         <option value="mobile">Mobile</option>
@@ -187,4 +187,11 @@ function setParams(params = {}) {
 	}
 
 	return url;
+}
+
+function getQuery(offest = 1) {
+    url_pieces = location.href.split('/');
+    value = url_pieces[url_pieces.length-offest];
+
+    return value;
 }
