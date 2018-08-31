@@ -87,7 +87,7 @@
                 snapshot.docs.forEach(doc => {
                     var msg = doc.data();
                     console.log(msg.sent_at)
-                    html += `<div class="${msg.sender_id==2 ? "sent":"reciever"} col l7 s12 m7">
+                    html += `<div class="${msg.sender_id==app.user.uid ? "sent":"reciever"} col l7 s12 m7">
                                 <span>${msg.msg}</span>
                                 <small class="time">
                                     ${new Date(msg.sent_at.seconds*1000).toDateString()}
@@ -118,7 +118,7 @@
         
         db.collection("messages").add({
             msg: $("#msg").val(),
-            sender_id: 2,
+            sender_id: app.user.uid,
             reciever_id: getQuery(2),
             ad_id: getParam('ad'),
             seen: 0,
