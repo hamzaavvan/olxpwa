@@ -27,7 +27,7 @@
             </div>
 
             <div class="no-threads hide">
-                <p>No chat found</p>
+                <p>No recent chat found</p>
             </div>
         </div>
         
@@ -85,64 +85,114 @@
             if (snapshot.docs) {
                 snapshot.docs.forEach(doc => {
                     var msg = doc.data();
-                    if (recievers.indexOf(msg.reciever_id)==-1 && msg.reciever_id!=app.user.uid && msg.reciever_id!=reciever_id) {
+
+                    // console.log(recievers.indexOf(msg.reciever_id)==-1) 
+                    // console.log(msg.sender_id!=app.user.uid) 
+                    // console.log(reciever_id!=msg.sender_id);
+                    
+                    if (recievers.indexOf(msg.reciever_id)==-1&&recievers.indexOf(msg.sender_id)==-1 && msg.sender_id!=app.user.uid && reciever_id!=msg.sender_id) {
+                        recievers.push(msg.sender_id);
+                    } else if (recievers.indexOf(msg.reciever_id)==-1&&recievers.indexOf(msg.sender_id)==-1  && msg.sender_id==app.user.uid && reciever_id!=msg.reciever_id) {
                         recievers.push(msg.reciever_id);
                     }
                 });
 
                 html = "";
-                console.log(reciever_id)
+                console.log("recievers " +recievers.length)
+                
+                if (recievers.length > 0)
+                    $(".no-threads").addClass("hide");
+                else
+                    $(".no-threads").toggleClass("hide");
+
+                var users = "";
                 recievers.forEach(sender => {
                 fetch(`/api/user/${sender}`).then(res => res.json()).then(d => {
                         var user = d.user;
-                        
                         if (user) {
-                            html += `
+                            users += `
                                     <div class="chip" onclick="window.location = '/message/${user._id}'">
                                         <span class="img-avatar circle">${user.name[0]}</span>
                                         ${user.name}
                                     </div>`;
                         
-                            $(".users-list").html(html);
+                            $(".users-list").html(users);
                         }
                     });
                 })
             }
         });
 
-        console.log(reciever_id)
-        db.collection("messages")
-        .where('sender_id', '==', app.user.uid)
-        .where('reciever_id', '==', reciever_id)
+        var msgs = [];
+        db.collection("messages").where('sender_id', '==', reciever_id)
         .onSnapshot((snapshot) => {
-        if (snapshot.docs) {
-            if (getQuery() && getQuery()!="message") {
-                $(".chat-body .start").hide();
-                $(".chat-body").removeClass("valign-wrapper");
-            }
+            msgs = [];
+            if (snapshot.docs) {
+                snapshot.docs.forEach(doc => {
+                    var msg = doc.data();
+                    msg._id = doc.id;
+                    
+                    if (msg.reciever_id==app.user.uid)
+                        msgs.push(msg);
 
-            var html = "";
+                });
+            }    
             
-            snapshot.docs.forEach(doc => {
-                var msg = doc.data();
-                
-                if (getQuery() && getQuery()!="message") {
-                    html += `<div class="${msg.sender_id==app.user.uid ? "sent":"recieve"} col l7 s7 m7">
-                                <span>${msg.msg}</span>
-                                <small class="time">
-                                    ${new Date(msg.sent_at.seconds*1000).toDateString()}
-                                </small>
-                            </div>`
+            db.collection("messages")
+            .where('sender_id', '==', app.user.uid)
+            .onSnapshot((snapshot) => {
+                if (snapshot.docs) {
+                    snapshot.docs.forEach(doc => {
+                        var msg = doc.data();
+                        msg._id = doc.id;
+                        
+                        if (msg.reciever_id==reciever_id)
+                            msgs.push(msg);
+                    });
+                    
+                    console.log(msgs)
+                    msgs.sort((a, b) => {
+                        return a.sent_at.seconds*1000 > b.sent_at.seconds*1000;
+                    })
+                    
+                    var i = 1;
+                    html = "";
+                    msgs.forEach(msg => {
+                        if (getQuery() && getQuery()!="message") {
+                            html += `<div doc-id="${msg._id}" class="${msg.sender_id==app.user.uid ? "sent":"recieve"} col l7 s7 m7">
+                                        <span>${msg.msg}</span>
+                                        <small class="time">
+                                            ${new Date(msg.sent_at.seconds*1000).toDateString()}
+                                        </small> 
+                                        ${msg.seen==1&&msg.sender_id==app.user.uid&& i>=msgs.length ? '<i class="material-icons tiny">check</i>' : ''}
+                                    </div>`
+                        }
+                        i++;
+                    });
+                    
+                    if (html != "") {
+                        if (getQuery() && getQuery()!="message") {
+                            $(".chat-body .start").hide();
+                            $(".chat-body").removeClass("valign-wrapper");
+                        }
+
+                        $(".chat-body").html(html);
+                        var a = $(".chat-body")[0];
+                        a.scrollTop = a.scrollHeight;
+                    }
                 }
             });
-
-            $(".chat-body").html(html);
-            var a = $(".chat-body")[0];
-            a.scrollTop = a.scrollHeight;
-        }
         });
 
     }, 1500)
+
+    $("#msg").on('click', function() {
+        var doc_id = $($(".recieve")[$(".recieve").length-1]).attr('doc-id');
+
+        db.collection("messages").doc(doc_id).update({
+            seen: 1
+        })
+    });
 
     $(".send-btn").on('click', function(e) {
         e.preventDefault();
@@ -159,19 +209,23 @@
                 "Content-Type": "application/json"
             }
         };
-        
-        db.collection("messages").add({
+
+        reciever_id = !getParam("ad") ? getQuery() : getQuery(2);
+        var payload = {
             msg: $("#msg").val(),
             sender_id: app.user.uid,
-            reciever_id: !getParam("ad") ? getQuery() : getQuery(2),
+            reciever_id: reciever_id,
             ad_id: getParam('ad') ? getParam('ad') : '',
+            token: app.user.uid+reciever_id,
             seen: 0,
             sent_at: new Date()
-        }).then(docRef => {
+        }
+        db.collection("messages").add(payload).then(docRef => {
             console.log(docRef);
           
             fetch(`/api/message/`, options).then(res => res.json()).then(d => {
                 console.log(d)
+                $("#msg").val("");
             });
         })
     })
