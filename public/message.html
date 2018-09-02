@@ -166,7 +166,7 @@
                                         <small class="time">
                                             ${new Date(msg.sent_at.seconds*1000).toDateString()}
                                         </small> 
-                                        ${msg.seen==1&&msg.sender_id==app.user.uid&& i>=msgs.length ? '<i class="material-icons tiny">check</i>' : ''}
+                                        ${msg.seen==1&&msg.sender_id==app.user.uid&& i>=msgs.length ? '<i class="material-icons tiny" title="Seen">check</i>' : ''}
                                     </div>`
                         }
                         i++;

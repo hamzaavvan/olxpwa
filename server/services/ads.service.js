@@ -22,7 +22,7 @@ exports.delete = async (query, page, limit, sort='', offset = 0) => {
         options.offset = offset;
         
     try {
-        let ads = await Ads.deleteOne(query, options);
+        let ads = await Ads.deleteOne(query);
 
         return ads;
     } catch (e) {

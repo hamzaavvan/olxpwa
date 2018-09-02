@@ -54,13 +54,13 @@ router.get('/:ad_id', async (req, res) => {
 
 router.delete('/:ad_id', async (req, res) => {
     var id = req.params.ad_id;
-    console.log(req.params)
 
     try {
         var ads = await AdsServices.delete({_id: id}, 1, 1);
         
         return res.status(200).json({status: 200, success: true, message: "Ad deleted"});
     } catch (e) {
+        console.log(e.message)
         return res.status(400).json({status: 400, message: e.message});
     }
 });

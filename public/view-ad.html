@@ -105,7 +105,7 @@
 
         if (app.user&&ad.user_id!=app.user._id) {
             $(".msg-seller").removeClass('hide').attr('href', `/message/${ad.user_id}/?ad=${ad._id}`);
-        } else {
+        } else if (app.user&&ad.user_id==app.user._id) {
             $(".delete").removeClass("hide");
 
             $('.delete').on('click', function() {
