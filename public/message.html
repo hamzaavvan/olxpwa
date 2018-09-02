@@ -70,6 +70,7 @@
             var html = `
                     <div class="chip" onclick="window.location = '/message/${user._id}'">
                         <span class="img-avatar circle">${user.name[0]}</span>
+                        <!--<img src="https://api.adorable.io/avatars/285/${user.name}" alt="${user.name}">-->
                         ${user.name}
                     </div>`;
 
@@ -113,6 +114,7 @@
                             users += `
                                     <div class="chip" onclick="window.location = '/message/${user._id}'">
                                         <span class="img-avatar circle">${user.name[0]}</span>
+                                        <!--<img src="https://api.adorable.io/avatars/285/${user.name}" alt="${user.name}">-->
                                         ${user.name}
                                     </div>`;
                         
