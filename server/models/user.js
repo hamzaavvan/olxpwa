@@ -8,6 +8,7 @@ var UserSchema = new mongoose.Schema({
     phone_no: {type: Number, maxlength: 11, required: true},
     city: String,
     province: String,
+    push_notif_token: String,
     created_at: Date
 });
 

@@ -81,7 +81,7 @@ app.get('/message/:id?', (req, res) => {
     if (req.session.uid)
         res.sendFile(path.join(__dirname, '../public/', 'message.html'));
     else
-        res.redirect('/');
+        res.redirect('/signin');
 })
 
 app.get('/signout', (req, res) => {

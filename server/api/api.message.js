@@ -3,12 +3,15 @@ const firebase = require('firebase-admin');
 var router = express.Router();
 var MessagesServices = require("../services/messages.service");
 
+var serviceAccount = require(__dirname+"/../olxpwa-hamzaavvan-firebase-adminsdk-4182w-ddc70f8408.json");
+
 firebase.initializeApp({
     apiKey: "AIzaSyCCGf5qhYR_E7G-2dT5Z0wL5-cqFRvOiCE",
     authDomain: "olxpwa-hamzaavvan.firebaseapp.com",
     databaseURL: "https://olxpwa-hamzaavvan.firebaseio.com",
     projectId: "olxpwa-hamzaavvan",
     storageBucket: "",
+    credential: firebase.credential.cert(serviceAccount),
     messagingSenderId: "1007008541847"
 });
 

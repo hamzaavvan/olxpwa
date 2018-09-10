@@ -157,6 +157,8 @@
                         return a.sent_at.seconds*1000 > b.sent_at.seconds*1000;
                     })
                     
+                    msgs = msgs.filter((v, i, a) => a.indexOf(v) === i);
+                    
                     var i = 1;
                     html = "";
                     msgs.forEach(msg => {
